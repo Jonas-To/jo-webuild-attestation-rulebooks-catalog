@@ -2,9 +2,9 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.org/schemas/ds002-pid-mdoc.json",
   "title": "ds002 - Person Identification Data (PID) – ISO/IEC 18013-5 mdoc",
-  "description": "Schema for the mdoc representation of a PID as defined in the ds002 PID Rulebook (Section 3.1). This models the conceptual structure of attributes within the mdoc namespace. Note: Actual mdoc credentials use CBOR encoding; this JSON Schema documents the attribute structure and constraints.",
+  "description": "Schema for the mdoc representation of a PID as defined in the ds002 PID Rulebook (section 5.1). This models the conceptual structure of attributes within the mdoc namespace. Note: Actual mdoc credentials use CBOR encoding; this JSON Schema documents the attribute structure and constraints.",
   "type": "object",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "$defs": {
     "cddl_tstr": {
       "type": "string",
@@ -40,7 +40,7 @@
     },
     "nationalities": {
       "type": "array",
-      "description": "Array of ISO 3166-1 alpha-2 country codes representing nationalities.",
+      "description": "Array of ISO 3166-1 alpha-2 country codes representing nationalities. 'QU' indicates an unknown nationality and 'QS' indicates no nationality.",
       "items": {
         "$ref": "#/$defs/country_code"
       },
@@ -109,7 +109,7 @@
         }
       ]
     },
-    "nationalities": {
+    "nationality": {
       "$ref": "#/$defs/nationalities",
       "description": "Array of ISO 3166-1 alpha-2 nationality codes. Note: Entire array is disclosed atomically in mdoc (no selective disclosure of individual nationalities).",
       "examples": [["DE", "FR"]]
@@ -141,8 +141,8 @@
     },
     "resident_street": {
       "$ref": "#/$defs/cddl_tstr",
-      "description": "Street name where the user currently resides.",
-      "examples": ["Main Street"]
+      "description": "Name of the street where the user currently resides, including the house number and any affix or suffix.",
+      "examples": ["Main Street 5A"]
     },
     "personal_administrative_number": {
       "$ref": "#/$defs/cddl_tstr",
@@ -151,7 +151,7 @@
     },
     "portrait": {
       "$ref": "#/$defs/cddl_bstr",
-      "description": "Facial image of the wallet user as raw binary (bstr), compliant with ISO 19794-5 or ISO 39794 specifications.",
+      "description": "Facial image of the user as raw JPEG image data (bstr), compliant with ISO/IEC 39794-5 or ISO/IEC 19794-5 clauses 8.2, 8.3 and 8.4. Empty where the user opts out. Mandatory only from 11 August 2028.",
       "examples": ["/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgH..."]
     },
     "family_name_birth": {
@@ -184,7 +184,7 @@
     },
     "expiry_date": {
       "type": "string",
-      "description": "Administrative expiry date/time of the PID. Can be tdate (RFC 3339 date-time) or full-date (YYYY-MM-DD).",
+      "description": "Date (and if possible time) when the administrative validity period expires. Optional. Can be tdate (RFC 3339 date-time) or full-date (YYYY-MM-DD).",
       "examples": ["2030-12-31", "2030-12-31T23:59:59Z"]
     },
     "issuing_authority": {
@@ -213,13 +213,13 @@
     },
     "issuance_date": {
       "type": "string",
-      "description": "Date/time when the PID was issued or when the administrative validity period began. Can be tdate (RFC 3339 date-time) or full-date (YYYY-MM-DD).",
+      "description": "Date (and if possible time) when the administrative validity period started. Optional. Can be tdate (RFC 3339 date-time) or full-date (YYYY-MM-DD).",
       "examples": ["2025-01-15", "2025-01-15T10:30:00Z"]
     },
     "attestation_legal_category": {
       "$ref": "#/$defs/cddl_tstr",
-      "const": "PUB-EAA",
-      "description": "Indication of the attestation legal category, one of QEAA, PUB-EAA or EAA. as required by  ARB_25 in Topic 12 of Annex 2 of the ARF."
+      "const": "PID",
+      "description": "Optional indication that the attestation has been issued as a PID. See section 3.3 of the PID Rulebook."
     },
     "trust_anchor": {
       "$ref": "#/$defs/cddl_tstr",
@@ -235,12 +235,10 @@
     "given_name",
     "birth_date",
     "place_of_birth",
-    "nationalities",
-    "attestation_legal_category",
-    "expiry_date",
+    "nationality",
     "issuing_authority",
     "issuing_country"
   ],
   "additionalProperties": false,
-  "$comment": "Note on location_status: Per Section 3.1.3 of the rulebook, location_status is absent for ISO/IEC 18013-5-compliant PIDs. The PID issuer adds revocation information to the MSO (Mobile Security Object) as specified in ISO/IEC 18013-5, not as a separate attribute."
+  "$comment": "Note on revocation: Per section 5.1 of the rulebook, revocation information is not an attribute. The PID Provider adds the status structure to the MSO (Mobile Security Object) as specified in Annex II to CIR 2024/2979."
 }

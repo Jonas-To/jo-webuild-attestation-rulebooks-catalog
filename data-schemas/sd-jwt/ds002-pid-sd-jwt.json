@@ -2,9 +2,9 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.org/schemas/ds002-pid-sd-jwt.json",
   "title": "ds002 - Person Identification Data (PID) – SD-JWT VC payload",
-  "description": "Schema for the SD-JWT VC payload of a PID as defined in the ds002 PID Rulebook (Chapter 4). This models the JSON claims set prior to SD-JWT disclosure/packing.",
+  "description": "Schema for the SD-JWT VC payload of a PID as defined in the ds002 PID Rulebook (section 5.2). This models the JSON claims set prior to SD-JWT disclosure/packing.",
   "type": "object",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "additionalProperties": true,
   "properties": {
     "vct": {
@@ -91,7 +91,7 @@
     },
     "nationalities": {
       "type": "array",
-      "description": "Array of alpha-2 nationality codes.",
+      "description": "Array of alpha-2 nationality codes. 'QU' indicates an unknown nationality and 'QS' indicates no nationality.",
       "items": {
         "type": "string",
         "minLength": 2,
@@ -123,8 +123,9 @@
         "street_address": {
           "type": "string",
           "examples": [
-            "123 Main St"
-          ]
+            "123 Main St 5A"
+          ],
+          "description": "Name of the street, including the house number and any affix or suffix."
         },
         "locality": {
           "type": "string",
@@ -193,8 +194,8 @@
     },
     "picture": {
       "type": "string",
-      "description": "Data URL with base64-encoded JPEG portrait.",
-      "pattern": "^data:image/jpeg;base64,[A-Za-z0-9+/=]+$",
+      "description": "Data URL with base64-encoded JPEG portrait, or an empty string where the user opts out. Mandatory only from 11 August 2028.",
+      "pattern": "^$|^data:image/jpeg;base64,[A-Za-z0-9+/=]+$",
       "examples": [
         "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAA....2gAIAQEABj8Cf//Z"
       ]
@@ -218,7 +219,7 @@
     },
     "date_of_expiry": {
       "type": "string",
-      "description": "Administrative expiry date in YYYY-MM-DD format.",
+      "description": "Date when the administrative validity period expires, in YYYY-MM-DD format. Optional.",
       "format": "date",
       "examples": [
         "2030-12-31"
@@ -226,7 +227,7 @@
     },
     "date_of_issuance": {
       "type": "string",
-      "description": "Administrative issuance date in YYYY-MM-DD format.",
+      "description": "Date when the administrative validity period started, in YYYY-MM-DD format. Optional.",
       "format": "date",
       "examples": [
         "2025-01-15"
@@ -268,8 +269,8 @@
     },
     "attestation_legal_category": {
       "type": "string",
-      "const": "PUB-EAA",
-      "description": "Indication of the attestation legal category, one of QEAA, PUB-EAA or EAA. as required by  ARB_25 in Topic 12 of Annex 2 of the ARF."
+      "const": "PID",
+      "description": "Optional indication that the attestation has been issued as a PID. See section 3.3 of the PID Rulebook."
     },
     "trust_anchor": {
       "type": "string",
@@ -372,7 +373,7 @@
     },
     "nbf": {
       "type": "integer",
-      "description": "Not-before (epoch seconds).",
+      "description": "Start of the technical validity period (epoch seconds).",
       "examples": [
         1767139200
       ]
@@ -386,7 +387,7 @@
     },
     "exp": {
       "type": "integer",
-      "description": "Expiry (epoch seconds).",
+      "description": "End of the technical validity period (epoch seconds).",
       "examples": [
         1767740400
       ]
@@ -414,40 +415,40 @@
     },
     "status": {
       "type": "object",
-      "description": "Credential status following SD-JWT VC Status List.",
-      "additionalProperties": false,
+      "description": "Revocation status following Token Status List. Required when the technical validity period exceeds 24 hours.",
+      "additionalProperties": true,
       "properties": {
-        "type": {
-          "type": "string",
-          "description": "Status mechanism type. For SD-JWT VC Status List this SHALL be 'status-list'."
-        },
-        "status_list_credential": {
-          "type": "string",
-          "format": "uri",
-          "description": "URI of the Status List Credential that contains the bitstring indicating status."
-        },
-        "status_list_index": {
-          "type": "integer",
-          "minimum": 0,
-          "description": "Zero-based index into the status list bitstring for this credential."
-        },
-        "status_purpose": {
-          "type": "string",
-          "description": "Purpose of the status entry. For PID this is 'revocation'."
+        "status_list": {
+          "type": "object",
+          "description": "Reference to the entry of this PID in a Token Status List.",
+          "additionalProperties": true,
+          "properties": {
+            "idx": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Index in the status list for this PID."
+            },
+            "uri": {
+              "type": "string",
+              "format": "uri",
+              "description": "URI of the Status List Token."
+            }
+          },
+          "required": [
+            "idx",
+            "uri"
+          ]
         }
       },
       "required": [
-        "type",
-        "status_list_credential",
-        "status_list_index",
-        "status_purpose"
+        "status_list"
       ],
       "examples": [
         {
-          "type": "status-list",
-          "status_list_credential": "https://issuer.example.com/status/1",
-          "status_list_index": 42,
-          "status_purpose": "revocation"
+          "status_list": {
+            "idx": 42,
+            "uri": "https://issuer.example.com/status/1"
+          }
         }
       ]
     }
@@ -458,11 +459,11 @@
     "birthdate",
     "place_of_birth",
     "nationalities",
-    "attestation_legal_category",
-    "date_of_expiry",
     "issuing_authority",
     "issuing_country",
     "vct",
-    "cnf"
+    "cnf",
+    "nbf",
+    "exp"
   ]
 }

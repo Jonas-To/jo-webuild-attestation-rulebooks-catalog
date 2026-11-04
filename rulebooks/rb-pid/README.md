@@ -11,8 +11,9 @@ Category: PID
 | Version | Date | Description |
 | --- | --- | --- |
 | 1.1.0 | 2026-09-11 | Restructured onto the generic WE BUILD attestation rulebook template (11 chapters). No normative content removed. Requirement references renumbered to the ARF v3.0.0 identifiers. |
+| 1.2.0 | 2026-11-04 | Aligned with CIR 2024/2977 as amended by CIR 2026/1731 (applicable from 11 August 2026) and with the EC PID Rulebook version 1.7. Attributes, metadata, encoding, revocation, presentation and references updated. Open issues recorded in section 2.2. |
 
-**Written against:** ARF version 3.0.0, WE BUILD template version 1.0 (generic)
+**Written against:** ARF version 3.0.0, EC PID Rulebook version 1.7, CIR 2024/2977 as amended by CIR 2026/1731, WE BUILD template version 1.0 (generic)
 
 **Feedback:** [GitHub issues](https://github.com/webuild-consortium/webuild-attestation-rulebooks-catalog/issues), or contact Work Package 4 in WE BUILD.
 
@@ -65,7 +66,7 @@ This document is the natural person identification data (PID) Rulebook
 and is part of the Architecture Reference Framework (ARF). It specifies
 how the mandatory and optional person identification data for the natural
 person, as defined in Tables 1 and 2 in the Annex of the Commission Implementing
-Regulation on PID and EAA [CIR 2024/2977], as well as the metadata specified in
+Regulation on PID and EAA [CIR 2024/2977], as amended by [CIR 2026/1731], as well as the metadata specified in
 Table 5 of that CIR, will be encoded within the EUDI Wallet ecosystem.
 Additionally, this document specifies further optional PID attributes that are
 not included in the CIR.
@@ -77,8 +78,8 @@ This PID Rulebook should be read in conjunction with the high-level requirements
 
 Person identification data for the legal person is out of scope of this document.
 
-**Relationship to the ARF PID Rulebook.** This Rulebook derives from the PID Rulebook
-in Annex 3.01 of the ARF and diverges from it in the following ways. The attribute and
+**Relationship to the ARF PID Rulebook.** This Rulebook derives from the EC PID Rulebook
+version 1.7, referenced by Annex 3.01 of the ARF, and diverges from it in the following ways. The attribute and
 metadata tables carry links to the WE BUILD semantic vocabulary. An explicit status
 list based revocation mapping is specified for SD-JWT VC, in line with the
 [WE BUILD Architecture Decision Record on attestation revocation](https://github.com/webuild-consortium/wp4-architecture/blob/main/adr/attestation-revocation-mechanism.md),
@@ -122,7 +123,8 @@ This Rulebook also complies with all applicable requirements in
 in Annex 2 of the Architecture Reference Framework.
 
 The attributes specified in this Rulebook comply with
-[CIR 2024/2977](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402977).
+[CIR 2024/2977](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402977), as amended by
+[CIR 2026/1731](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202601731), except for the open issues recorded in section 2.2.
 
 Further requirements in this Rulebook comply with or reference the applicable
 requirements in the ARF and the relevant Implementing Acts.
@@ -135,8 +137,22 @@ version 1.5.
 ### 2.2 Regulatory basis
 
 This Rulebook specifies how the mandatory and optional person identification data
-defined in Tables 1 and 2 of the Annex to CIR (EU) 2024/2977, and the metadata
-defined in Table 5 of that CIR, are encoded within the EUDI Wallet ecosystem.
+defined in Tables 1 and 2 of the Annex to CIR (EU) 2024/2977, as replaced by Annex I to
+CIR (EU) 2026/1731, and the metadata defined in Table 5 of that Annex, are encoded within
+the EUDI Wallet ecosystem. Section 4 of that Annex applies clauses 5 and 6 of
+[ETSI TS 119 472-1] V1.2.1 to PIDs through Annex II to [CIR 2024/2979], except clauses
+5.2.2, 5.2.4, 5.2.5, EAA-6.1-03, 6.2.2, 6.2.3, 6.2.4 and 6.2.5.
+
+The sources are not fully consistent with each other. This Rulebook takes the following
+positions and records them as open issues.
+
+| Topic | Inconsistency | Position in this Rulebook |
+| --- | --- | --- |
+| `attestation_legal_category`, `trust_anchor` | Sections 4.1 and 4.2 of the Annex require data not set out in the Annex to be defined in a domestic namespace or type. The EC PID Rulebook keeps both as optional attributes of the base PID. | Optional, as in the EC PID Rulebook. See section 3.3. |
+| `vct` and `vct#integrity` | EAA-5.2.1.2-02 and EAA-5.2.1.2-03 of [ETSI TS 119 472-1] have `vct` point to Type Metadata and require `vct#integrity`. The Annex and PID_14 use the URN `urn:eudi:pid:1` and do not mention `vct#integrity`. | The Annex and the ARF are followed. `vct#integrity` is not required. |
+| mdoc `issue_date` | EAA-6.2.6-01 of [ETSI TS 119 472-1] requires `issue_date`. Table 6 of the Annex defines an optional `issuance_date`. | The Annex is followed. `issue_date` is not required. |
+| `nbf` | PID_19 treats `nbf` as optional. Section 4.2 of the Annex and EAA-5.2.7.1-01 of [ETSI TS 119 472-1] require it. | `nbf` is required. |
+| `address.house_number` | The EC PID Rulebook no longer defines `resident_house_number`, but its SD-JWT VC table still lists this claim. | Not defined. The house number is part of `resident_street`. |
 
 ### 2.3 Traceability
 
@@ -161,12 +177,12 @@ marked not applicable carry a stated reason.
 | EW-DM-12-016 / EW-DM-12-017 / EW-DM-12-018 | ARB_13 / ARB_14 / ARB_15 | no |  | Point b, by category; PID is not an EAA |
 | EW-DM-12-019 / EW-DM-12-020 | ARB_16 / ARB_17 | no |  | Point c, by category; PID is not an EAA |
 | EW-DM-12-021 / EW-DM-12-022 | ARB_18 / ARB_19 | no |  | Point e, by category; PID is not an EAA |
-| EW-DM-12-023 / EW-DM-12-024 | ARB_20 / ARB_21 | yes | 4.2, 10 | `trust_anchor` metadata and the trust framework |
-| EW-DM-12-029 | ARB_25 | yes | 4.1 | Legal category attribute; see the deviation recorded in section 4.1 |
+| EW-DM-12-023 / EW-DM-12-024 | ARB_20 / ARB_21 | no |  | Apply to QEAA, PuB-EAA and non-qualified EAA. `trust_anchor` is retained as optional, see sections 3.3 and 10 |
+| EW-DM-12-029 | ARB_25 | yes | 3.3 | Legal category attribute; see the deviation recorded in section 3.3 |
 | EW-DM-12-030 | ARB_26 | no |  | Trust anchor publication for non-qualified EAA |
 | EW-DM-12-031 | ARB_27 | no |  | Whether the Relying Party must also verify a PID; this attestation is the PID |
 | EW-DM-12-032 | ARB_28 | no |  | `cryptographically_bound_to` is not used by this attestation |
-| EW-DM-12-034 | ARB_30 | yes | 3, 5 | Selective disclosure stated per claim |
+| EW-DM-12-034 | ARB_30 | yes | 5.2 | Selective disclosure stated for all claims |
 | EW-DM-12-035 | ARB_31 | no |  | No Claim Selective Disclosure Metadata document is used |
 | EW-DM-12-038 | ARB_34 | yes | 7.1 | Device binding |
 
@@ -178,23 +194,26 @@ encoding of each attribute per format is given in chapter 5.
 ### 3.1 Introduction
 
 
-Sections [2.2](#22-mandatory-attributes-specified-in-cir-20242977), [2.3](#23-optional-attributes-specified-in-cir-20242977), [2.4](#24-condition-attributes), [2.5](#25-mandatory-metadata-specified-in-cir-20242977) and [2.6](#26-optional-metadata-specified-in-cir-20242977) of this chapter list the mandatory and optional
-PID attributes and PID metadata defined in CIR 2024/2977. [Section 2.7](#27-additional-optional-attributes-specified-in-this-rulebook) lists the optional PID attributes additionally defined in this PID Rulebook.
+Sections [3.2](#32-mandatory-attributes), [3.3](#33-optional-attributes), [4.1](#41-mandatory-metadata) and [4.2](#42-optional-metadata) list the mandatory and optional
+PID attributes and PID metadata defined in CIR 2024/2977 as amended. Section 3.3 also lists the optional PID attributes additionally defined in this PID Rulebook.
 
 Note that, when requesting PID attributes from a Wallet Unit, a Relying Party is not required to request all mandatory attributes. Also, a user is allowed to refuse to present a mandatory attribute, if it is requested by a Relying Party.
 
-The data identifiers and definitions given in Sections 2.2, 2.3, 2.4, and 2.5
-are identical to those in CIR 2024/2977, except where explicitly indicated that
+The data identifiers and definitions given in sections 3.2, 3.3, 4.1 and 4.2
+are identical to those in CIR 2024/2977 as amended, except where explicitly indicated that
 some further explanations have been added in this Rulebook.
+
+Member States shall ensure that selective disclosure applies to each data identifier,
+including the portrait.
 
 All data identifiers and definitions in this chapter are independent of any
 encoding used. Consequently,
 
 - the data identifiers in these tables are not necessarily the same as the
-attribute identifiers used for PIDs complying with [ISO/IEC 18013-5]. [Chapter 3.1](#31-isoiec-18013-5-compliant-encoding) specifies the attribute
+attribute identifiers used for PIDs complying with [ISO/IEC 18013-5]. [Section 5.1](#51-isoiec-18013-5-compliant-encoding) specifies the attribute
 identifiers to be used for PIDs in [ISO/IEC 18013-5] format
 - the data identifiers in these tables are not necessarily the same as the claim
-names used for PIDs complying with [SD-JWT VC]. [Section 3.2](#32-sd-jwt-vc-based-encoding-of-pid) specifies the claim names to be used for such PIDs.
+names used for PIDs complying with [SD-JWT VC]. [Section 5.2](#52-sd-jwt-vc-based-encoding) specifies the claim names to be used for such PIDs.
 
 The machine-readable schema artefacts for this attestation are:
 
@@ -213,6 +232,15 @@ The machine-readable schema artefacts for this attestation are:
 | birth_date | [dateOfBirth](https://w3id.org/ebwv#dateOfBirth) | Day, month, and year on which the user to whom the person identification data relates was born. | 12/02/1978 |
 | birth_place | [placeOfBirth](https://w3id.org/ebwv#placeOfBirth) | The country as an alpha-2 country code as specified in ISO 3166-1, or the state, province, district, or local area or the municipality, city, town, or village where the user to whom the person identification data relates was born. | Amsterdam |
 | nationality | [citizenship](https://w3id.org/ebwv#citizenship) | One or more alpha-2 country codes as specified in ISO 3166-1, representing the nationality of the user to whom the person identification data relates. | NL |
+| portrait | [portrait](https://w3id.org/ebwv#portrait) | Except where the user explicitly opts out, where applicable, the facial image of the user to whom the person identification data relates, compliant with the quality requirements for a full frontal image type as set out in ISO/IEC 39794-5 or, for backward compatibility, ISO/IEC 19794-5, clauses 8.2, 8.3 and 8.4, provided as encoded image data without the headers or blocks as specified in clause 5 of ISO/IEC 19794-5, except for the image data itself (a JPEG) shall apply from 11 August 2028. | \- |
+
+The Annex adds the following rules to these attributes:
+
+- Where the birth date is not known, Member States shall choose appropriate values that comply with the formats in chapter 5.
+- Where the nationality is unknown, Member States shall use the value `QU`. Where the person does not hold a nationality, Member States shall use the value `QS`.
+- Member States may provide that the user has the option to decline the insertion of the portrait. Where the user opts out, the value is set empty, as an empty JSON `string` or CBOR `bstr` (PID_03).
+
+**Further clarification added in this PID Rulebook:** `portrait` is mandatory only from 11 August 2028, see recital 3 of CIR 2026/1731. Until then a PID Provider MAY omit it.
 
 ### 3.3 Optional attributes
 
@@ -223,15 +251,13 @@ The machine-readable schema artefacts for this attestation are:
 | resident_state | [domicile](https://w3id.org/ebwv#domicile).[adminUnitL2](https://w3id.org/ebwv#adminUnitL2) | The state, province, district, or local area where the user to whom the person identification data relates currently resides. | Zuid-Holland |  |
 | resident_city | [domicile](https://w3id.org/ebwv#domicile).[postName](https://w3id.org/ebwv#postName) | The municipality, city, town, or village where the user to whom the person identification data relates currently resides. | Leiden |  |
 | resident_postal_code | [domicile](https://w3id.org/ebwv#domicile).[postCode](https://w3id.org/ebwv#postCode) | The postal code of the place where the user to whom the person identification data relates currently resides. | 2312 JD |  |
-| resident_street | [domicile](https://w3id.org/ebwv#domicile).[thoroughfare](https://w3id.org/ebwv#thoroughfare) | The name of the street where the user to whom the person identification data relates currently resides. | Rietveld |  |
-| resident_house_number |  | The house number where the user to whom the person identification data relates currently resides, including any affix or suffix. | 1 |  |
-| personal_administrative_number | [personalAdministrativeNumber](https://w3id.org/ebwv#personalAdministrativeNumber) | A value assigned to the natural person that is unique among all personal administrative numbers issued by the provider of person identification data. Where Member States opt to include this attribute, they shall describe in their electronic identification schemes under which the person identification data is issued, the policy that they apply to the values of this attribute, including, where applicable, specific conditions for the processing of this value. | 123456782 |  |
-| portrait | [portrait](https://w3id.org/ebwv#portrait) | [Facial image of the wallet user compliant with ISO 19794-5 or ISO 39794 specifications. Further clarification added in this PID Rulebook: The detailed format of the portrait is specified in requirement PID_03 in Annex 2, Topic 3.](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework/blob/main/docs/annexes/annex-2/annex-2.02-high-level-requirements-by-topic.md#a232-topic-3---pid-rulebook) | \- |  |
+| resident_street | [domicile](https://w3id.org/ebwv#domicile).[thoroughfare](https://w3id.org/ebwv#thoroughfare) | The name of the street where the user to whom the person identification data relates currently resides, including the house number and any affix or suffix thereof. | Rietveld 1 |  |
+| personal_administrative_number | [personalAdministrativeNumber](https://w3id.org/ebwv#personalAdministrativeNumber) | A value assigned to the user to whom the person identification data relates that is unique among all personal administrative numbers issued by the provider of person identification data. Where Member States opt to include this attribute, they shall describe in their electronic identification schemes under which the person identification data is issued, the policy that they apply to the values of this attribute, including, where applicable, specific conditions for the processing of this value. | 123456782 |  |
 | family_name_birth | [birthName](https://w3id.org/ebwv#birthName) | Last name(s) or surname(s) of the user to whom the person identification data relates at the time of birth. | Poepjes |  |
 | given_name_birth | [birthName](https://w3id.org/ebwv#birthName) | First name(s), including middle name(s), of the user to whom the person identification data relates at the time of birth. | Björn |  |
 | sex | [gender](https://w3id.org/ebwv#gender) | Values shall be one of the following: 0 = not known; 1 = male; 2 = female; 3 = other; 4 = inter; 5 = diverse; 6 = open; 9 = not applicable. For values 0, 1, 2 and 9, ISO/IEC 5218 applies. | 1 |  |
-| email_address | [contactPoint](https://w3id.org/ebwv#contactPoint).[hasEmail](https://w3id.org/ebwv#email) | Electronic mail address of the user to whom the person identification data relates, in conformance with [RFC 5322]. | [wijnandthart@example.com](mailto:wijnandthart@example.com) |  |
-| mobile_phone_number | [contactPoint](https://w3id.org/ebwv#contactPoint).[hasTelephone](https://w3id.org/ebwv#telephone) | Mobile telephone number of the user to whom the person identification data relates, starting with the '+' symbol as the international code prefix and the country code, followed by numbers only. | 31123456789 |  |
+| email_address | [contactPoint](https://w3id.org/ebwv#contactPoint).[hasEmail](https://w3id.org/ebwv#email) | Electronic mail address of the user to whom the person identification data relates, in accordance with [RFC 5322]. | [wijnandthart@example.com](mailto:wijnandthart@example.com) |  |
+| mobile_phone_number | [contactPoint](https://w3id.org/ebwv#contactPoint).[hasTelephone](https://w3id.org/ebwv#telephone) | Mobile telephone number of the user to whom the person identification data relates, starting with the '+' symbol as the international code prefix and the country code, followed by numbers only. | +31123456789 |  |
 
 The following optional attributes are specified by this Rulebook rather than by
 CIR 2024/2977.
@@ -239,9 +265,22 @@ CIR 2024/2977.
 
 | **Data Identifier** | **Definition** | **Example value** |
 | --- | --- | --- |
-| issuance_date | Date (and if possible time) when the person identification data was issued and/or the administrative validity period of the person identification data began. See also the clarification for expiry_date in [Section 2.5](#25-mandatory-metadata-specified-in-cir-20242977). | 19-12-2025 |
 | trust_anchor | This attribute indicates at least the URL at which a machine-readable version of the trust anchor to be used for verifying the PID can be found or looked up. *Note: This attribute corresponds to the location meant in Annex V point h) or Annex VII point h) of the [European Digital Identity Regulation], which is mandatory for QEAAs. This PID Rulebook adds this as an optional attribute for PIDs as well, so PID Providers are able to ensure that PIDs can be validated by Relying Parties in the same manner as QEAAs.* | <https://example.com/trustanchors/pid/> |
 | attestation_legal_category | This attribute indicates that a PID has indeed been issued as a PID. *Note: According to Annex V point a) and Annex VII point a) of the [European Digital Identity Regulation] an indication, at least in a form suitable for automated processing, that the attestation has been issued as a QEAA or Pub-EAA SHALL be defined. This PID Rulebook adds this as an optional attribute for PIDs as well, so PID Providers are able to ensure that PIDs can be validated by Relying Parties in the same manner as QEAAs.* | PID |
+
+**Legal category.** This Rulebook retains the optional `attestation_legal_category`
+attribute with the value `PID`, as the EC PID Rulebook does.
+
+> **Deviation from the generic template.** Section 4.1 of the generic WE BUILD template
+> states that `attestation_legal_category` is superseded by the `category` attribute of
+> [ETSI TS 119 472-1] and SHALL NOT be used, and that PID omits `category` entirely.
+> This Rulebook does not follow that instruction, for two reasons. First, EW-DM-12-029
+> (legacy ARB_25) of ARF v3.0.0 is a SHALL that still requires `attestation_legal_category` to be included in a
+> Rulebook. Second, the `category` values defined in [ETSI TS 119 472-1] cover qualified
+> and public-sector EAA only, and CIR 2024/2977 as amended disapplies clause 5.2.2 and
+> clause 6.2.2 of that specification for PIDs, so there is no value for a PID to migrate
+> to. This attribute is not set out in the Annex; see the open issue in section 2.2. This
+> deviation is recorded for the rulebook quality assurance group to resolve.
 
 ### 3.4 Conditional attributes
 
@@ -256,23 +295,9 @@ Metadata describes the attestation rather than its subject.
 
 | **Data Identifier** | **Definition** | **Example value** |
 | --- | --- | --- |
-| expiry_date | Date (and if possible time) when the person identification data will expire. **Further clarification added in this PID Rulebook:** This attribute, as well as the optional issuance_date attribute specified in [Section 2.7](#27-additional-optional-attributes-specified-in-this-rulebook), pertains to the administrative validity period of the PID. It is up to the PID Provider to decide whether a PID has an administrative validity period. However, if present, it in general is different from the technical validity period of a PID. The technical validity period is a mandatory element of all PIDs (and also attestations) in the EUDI Wallet ecosystem. It typically is short, a few days or weeks at most, if not shorter, to mitigate challenges regarding tracking of users by malicious Relying Parties based on the repeated presentation of the same PID. On the other hand, the administrative validity period is typically at least a few years long. During the administrative validity period of a PID, the PID Provider will therefore provide multiple successive PIDs to a user, typically without any actions being expected from the user. However, when the administrative validity period of a PID ends, typically the user has to apply for an entirely new PID. | 19-12-2025 |
 | issuing_authority | Name of the administrative authority that issued the person identification data, or the ISO 3166 alpha-2 country code of the respective Member State if there is no separate authority entitled to issue person identification data. | Rijksdienst voor Identiteitsgegevens |
 | issuing_country | Alpha-2 country code, as specified in ISO 3166-1, of the country or territory of the provider of the person identification data. | NL |
 
-**Legal category.** This Rulebook retains the `attestation_legal_category` attribute
-with the value `PID`, as specified in section 3.3 above.
-
-> **Deviation from the generic template.** Section 4.1 of the generic WE BUILD template
-> states that `attestation_legal_category` is superseded by the `category` attribute of
-> [ETSI TS 119 472-1] and SHALL NOT be used, and that PID omits `category` entirely.
-> This Rulebook does not follow that instruction, for three reasons. First,
-> EW-DM-12-029 (legacy ARB_25) of ARF v3.0.0 is a SHALL that still requires
-> `attestation_legal_category` to be included. Second, the `category` values defined in
-> [ETSI TS 119 472-1] cover qualified and public-sector EAA only, so there is no value
-> for a PID to migrate to. Third, this Rulebook already relies on the attribute in the
-> verification sequence in chapter 10. This deviation is recorded for the rulebook
-> quality assurance group to resolve.
 
 ### 4.2 Optional metadata
 
@@ -281,7 +306,12 @@ with the value `PID`, as specified in section 3.3 above.
 | --- | --- | --- |
 | document_number | A number for the person identification data, assigned by the provider of person identification data. | A01234567 |
 | issuing_jurisdiction | Country subdivision code of the jurisdiction that issued the person identification data, as specified in ISO 3166-2:2020, Clause 8. The first part of the code shall be the same as the value for the issuing country. | NL |
-| location_status | The location of validity status information on the person identification data where the providers of person identification data revoke person identification data. | <https://example.com/statuslists/pid/> |
+| expiry_date | Date (and if possible time) when the administrative validity period of the person identification data will expire. **Further clarification added in this PID Rulebook:** This attribute, as well as `issuance_date`, pertains to the administrative validity period of the PID. It is up to the PID Provider to decide whether a PID has an administrative validity period. However, if present, it in general is different from the technical validity period of a PID. The technical validity period is a mandatory element of all PIDs (and also attestations) in the EUDI Wallet ecosystem. It typically is short, a few days or weeks at most, if not shorter, to mitigate challenges regarding tracking of users by malicious Relying Parties based on the repeated presentation of the same PID. On the other hand, the administrative validity period is typically at least a few years long. During the administrative validity period of a PID, the PID Provider will therefore provide multiple successive PIDs to a user, typically without any actions being expected from the user. However, when the administrative validity period of a PID ends, typically the user has to apply for an entirely new PID. | 19-12-2035 |
+| issuance_date | Date, and if possible time, when the administrative validity period of the person identification data started. See also the clarification for `expiry_date`. | 19-12-2025 |
+
+CIR 2024/2977 as amended no longer lists `location_status` as metadata. Where a PID Provider
+revokes PIDs, Article 5(7) still requires it to indicate the location of validity status
+information in the PID. This is done with the status structures in chapters 5 and 8.
 
 ### 4.3 Conditional metadata
 
@@ -292,7 +322,7 @@ This attestation defines no conditional metadata.
 | Code list | Source | Extensible |
 | --- | --- | --- |
 | `sex` | ISO/IEC 5218 for values 0, 1, 2 and 9; values 3 to 6 are specified in section 3.3 | no |
-| `nationality`, `resident_country`, `issuing_country` | ISO 3166-1 alpha-2 | no, follows the source standard |
+| `nationality`, `resident_country`, `issuing_country` | ISO 3166-1 alpha-2; `nationality` also uses `QU` and `QS`, see section 3.2 | no, follows the source standard |
 | `issuing_jurisdiction` | ISO 3166-2:2020, Clause 8 | no, follows the source standard |
 
 ### 4.5 Integrity rules
@@ -301,18 +331,23 @@ This attestation defines no conditional metadata.
 | --- | --- | --- |
 | The first part of `issuing_jurisdiction` SHALL equal `issuing_country` | PID Provider, at issuance | The PID is not issued |
 | `place_of_birth` SHALL contain at least one of `country`, `region` or `locality` | PID Provider, at issuance | The PID is not issued |
-| A `status` claim SHALL be present when the technical validity period exceeds 25 hours | PID Provider, at issuance | The PID is not issued |
+| A PID whose technical validity period exceeds 24 hours SHALL carry revocation status information, see chapter 8 | PID Provider, at issuance | The PID is not issued |
 | `trust_anchor`, where present, SHALL be the attribute referenced by chapter 10 | Relying Party, at verification | The Relying Party applies its risk analysis under chapter 10 |
+| Where the user opts out of the portrait, `portrait` SHALL be present and empty once it is mandatory | PID Provider, at issuance | The PID is not issued |
 
 ## 5 Formats
 
 | Format | Supported | Identifier | Specification | Notes |
 | --- | --- | --- | --- | --- |
-| ISO/IEC 18013-5 mdoc | yes | doctype `eu.europa.ec.eudi.pid.1`, namespace `eu.europa.ec.eudi.pid.1` | [ISO/IEC 18013-5] | Required, proximity presentation is in scope |
-| SD-JWT VC | yes | `vct` `urn:eudi:pid:1` | [SD-JWT VC], [HAIP] | SHALL follow the HAIP profile |
+| ISO/IEC 18013-5 mdoc | yes | doctype `eu.europa.ec.eudi.pid.1`, namespace `eu.europa.ec.eudi.pid.1` | [ISO/IEC 18013-5], [ETSI TS 119 472-1] clause 6 | Required, proximity presentation is in scope |
+| SD-JWT VC | yes | `vct` `urn:eudi:pid:1` | [SD-JWT VC], [HAIP], [ETSI TS 119 472-1] clause 5 | SHALL follow the HAIP profile |
 | W3C VCDM | no |  |  | Permitted for non-qualified EAA only |
 
-A PID SHALL be issued in both the ISO/IEC 18013-5 and SD-JWT VC formats.
+A PID SHALL be issued in both the ISO/IEC 18013-5 and SD-JWT VC formats (PID_02).
+
+Attributes that are not set out in the Annex SHALL be defined within a domestic namespace
+or domestic type, except for the two attributes recorded in section 2.2. The domestic scheme
+shall be published in accordance with Article 8 of [CIR 2025/1569].
 
 ### 5.1 ISO/IEC 18013-5-compliant encoding
 
@@ -329,7 +364,7 @@ specified in the table below. The table contains the following information for
 all attributes:
 
 - The first column lists the data identifier specified in
-  [Chapter 2](#2-pid-attributes-and-metadata) above.
+  chapters [3](#3-attestation-attributes) and [4](#4-metadata) above.
 - The second column lists the corresponding attribute identifier to be used in
   presentation requests and responses according to [ISO/IEC 18013-5].
 - The third column indicates the encoding of each attribute. This column uses
@@ -360,7 +395,12 @@ all attributes:
       short as possible;
     - indefinite-length items SHALL be made into definite-length items.
 
-Note that the presence of each attribute (mandatory or optional) is already specified in [Chapter 2](#2-pid-attributes-and-metadata) above.
+Note that the presence of each attribute (mandatory or optional) is already specified in chapters [3](#3-attestation-attributes) and [4](#4-metadata) above.
+
+The following requirements of section 4.1 of the Annex also apply:
+
+- The `deviceKey` member within the `deviceKeyInfo` member of the `MobileSecurityObject` SHALL contain a public key corresponding to a private key stored in the wallet secure cryptographic device (WSCD) of the user.
+- The protected header of the CB-AdES signature of the PID SHALL contain the `x5u` and `x5t` header parameters specified in RFC 9360. The digest algorithm used in `x5t` SHALL be SHA-256.
 
 | **Data Identifier** | **Attribute identifier** | **Encoding format** |
 | --- | --- | --- |
@@ -375,12 +415,11 @@ Note that the presence of each attribute (mandatory or optional) is already spec
 | resident_city | resident_city | ``tstr`` |
 | resident_postal_code | resident_postal_code | ``tstr`` |
 | resident_street | resident_street | ``tstr`` |
-| resident_house_number | resident_house_number | ``tstr`` |
 | personal_administrative_number | personal_administrative_number | ``tstr`` |
-| portrait | portrait | ``bstr``; see additional information in [Section 2.3](#23-optional-attributes-specified-in-cir-20242977) |
+| portrait | portrait | ``bstr``; see additional information in [section 3.2](#32-mandatory-attributes) |
 | family_name_birth | family_name_birth | ``tstr`` |
 | given_name_birth | given_name_birth | ``tstr`` |
-| sex | sex | ``uint``; see additional information in [Section 2.3](#23-optional-attributes-specified-in-cir-20242977) |
+| sex | sex | ``uint``; see additional information in [section 3.3](#33-optional-attributes) |
 | email_address | email_address | ``tstr`` |
 | mobile_phone_number | mobile_phone_number | ``tstr`` |
 | expiry_date | expiry_date | ``tdate`` or ``full-date`` |
@@ -388,7 +427,6 @@ Note that the presence of each attribute (mandatory or optional) is already spec
 | issuing_country | issuing_country | ``tstr`` |
 | document_number | document_number | ``tstr`` |
 | issuing_jurisdiction | issuing_jurisdiction | ``tstr`` |
-| location_status | - | See [Section 3.1.4](#314-attribute-location_status). |
 | issuance_date | issuance_date | ``tdate`` or ``full-date`` |
 | trust_anchor | trust_anchor | ``tstr`` |
 | attestation_legal_category | attestation_legal_category | ``tstr`` |
@@ -416,17 +454,16 @@ nationality in the nationality attribute, and for the remaining nationalities
 use one or more domestic data attributes specified according to requirement
 PID_06 in [Annex 2, Topic 3](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework/blob/main/docs/annexes/annex-2/annex-2.02-high-level-requirements-by-topic.md#a232-topic-3---pid-rulebook).
 
-##### 3.1.4 Attribute location_status
+The values `QU` and `QS` specified in section 3.2 are also encoded as a ``CountryCode``.
 
-For ISO/IEC 18013-5-compliant PIDs, the attribute location_status is
-absent, since the PID issuer will add revocation information, if needed, to the MSO as specified in [ISO/IEC 18013-5].
+##### 3.1.4 Revocation information
+
+For ISO/IEC 18013-5-compliant PIDs, revocation information is not an attribute. Where the PID is
+revocable, its MSO SHALL contain the `status` structure specified in EAA-6.2.10.1-17 of Annex II to [CIR 2024/2979], see chapter 8.
 
 ##### 3.1.5 Attribute birth_date
 
-For PIDs compliant with ISO/IEC 18013-5, dates are encoded as specified in RFC 8949 (which references RFC 3339). This encoding does not contain provisions for encoding partial dates. This
-may cause challenges in case the birth date of a user is not (fully) known. To
-deal with such cases, a PID Provider could adopt a policy to choose appropriate (and RFC 3339-compliant) values for the unknown date elements. However, mandating such a policy is out of
-scope of this document.
+For PIDs compliant with ISO/IEC 18013-5, dates are encoded as specified in RFC 8943 and RFC 3339. This encoding does not contain provisions for encoding partial dates. Where the birth date of a user is not (fully) known, Member States shall choose appropriate values that comply with this encoding, as required by the Annex.
 
 ##### 3.1.6 Attribute place_of_birth
 
@@ -469,7 +506,7 @@ The following IANA registered claim names are to be used for PIDs:
 | given_name | given_name | string | [OIDC] definition: Given name(s) or first name(s) to whom the person identification data relates. Note that in some cultures, people can have multiple given names; all can be present, with the names being separated by space characters. |
 | birth_date | birthdate | string | [OIDC] definition: ISO 8601-1 [ISO8601‑1] YYYY-MM-DD format |
 | birth_place | place_of_birth | JSON structure | [EKYC] definition: At least one of the members (country, region or locality) SHALL be present in the JSON structure |
-| nationality | nationalities | array of strings | Using alpha-2 country codes as defined in [Section 2.2](#22-mandatory-attributes-specified-in-cir-20242977) |
+| nationality | nationalities | array of strings | Using alpha-2 country codes as defined in [section 3.2](#32-mandatory-attributes), including `QU` and `QS` |
 | resident_address | address.formatted | string | [OIDC] definition: Full mailing address, formatted for display or use on a mailing label. This field MAY contain multiple lines, separated by newlines. Newlines can be represented either as a carriage return/line feed pair ("\r\n") or as a single line feed character ("\n") |
 | resident_country | address.country | string | [OIDC] definition: Country name component |
 | resident_state | address.region | string | [OIDC] definition: State, province, prefecture, or region component. |
@@ -480,46 +517,49 @@ The following IANA registered claim names are to be used for PIDs:
 | given_name_birth | birth_given_name | string | [EKYC] definition:  Given name(s) when they were born, or at least from the time they were a child to whom the person identification data relates. This term can be used by a person who changes the given name later in life for any reason. Note that in some cultures, people can have multiple given names; all can be present, with the names being separated by space characters. |
 | email_address | email | string | [OIDC] definition:  Preferred e-mail address to whom the person identification data relates.. Its value MUST conform to the RFC 5322 [RFC5322] addr-spec syntax. The RP MUST NOT rely upon this value being unique |
 | mobile_phone_number | phone_number | string | [OIDC] definition:  Preferred telephone number to whom the person identification data relates.. E.164 [E.164] is RECOMMENDED as the format of this Claim, for example, +1 (425) 555-1212 or +56 (2) 687 2400. If the phone number contains an extension, it is RECOMMENDED that the extension be represented using the RFC 3966 [RFC3966] extension syntax, for example, +1 (604) 555-1234;ext=5678 |
-| portrait | picture | string | data URL containing the base64-encoded portrait in JPEG format according to PID_03 in [Annex 2, Topic 3](https://eu-digital-identity-wallet.github.io/eudi-doc-architecture-and-reference-framework/3.0.0/annexes/annex-2/annex-2.01-high-level-requirements/) |
+| portrait | picture | string | data URL containing the base64-encoded portrait in JPEG format; an empty string where the user opts out, according to PID_03 in [Annex 2, Topic 3](https://eu-digital-identity-wallet.github.io/eudi-doc-architecture-and-reference-framework/3.0.0/annexes/annex-2/annex-2.01-high-level-requirements/) |
 
-Note: The standard JWT claims nbf and exp are used to express the technical validity period of a SD-JWT VC-compliant PID.
+The JWT claims `nbf` and `exp` SHALL be used to express the technical validity period of a SD-JWT VC-compliant PID.
+
+The following requirements of section 4.2 of the Annex also apply:
+
+- The `cnf` claim SHALL be included and SHALL contain a public key generated from a private key stored in the WSCD of the user's Wallet Unit.
+- The protected header of the signature of the PID SHALL contain the `x5u` and `x5t#S256` header parameters specified in RFC 7515.
+
+**Selective disclosure (EW-DM-12-034).** A PID Provider MUST make each claim in the tables of this section selectively disclosable individually, including each member of `address` and each member of `place_of_birth` where a member is present. It MUST NOT do so for `vct`, `iss`, `nbf`, `exp`, `cnf` and `status`, which [SD-JWT VC] defines as non-selectively disclosable. It MAY do so for individual entries of the `nationalities` array, and for any other claim.
 
 The following Private Names specific to the attestation type defined in this document are to be used for PIDs:
 
 | **Data Identifier** | **Attribute identifier** | **Encoding format** | **Notes** |
 | --- | --- | --- | --- |
-| attestation_legal_category | attestation_legal_category | string | SHALL be `PID` |
+| attestation_legal_category | attestation_legal_category | string | Optional; SHALL be `PID` when present |
 | expiry_date | date_of_expiry | string | ISO 8601-1 [ISO8601‑1] YYYY-MM-DD format, as defined in Section 5.4.4.2 of [EKYC Schema] |
 | issuance_date | date_of_issuance | string | ISO 8601-1 [ISO8601‑1] YYYY-MM-DD format, as defined in Section 5.4.4.2 of [EKYC Schema] |
 | personal_administrative_number | personal_administrative_number | string |  |
-| resident_house_number | address.house_number | string | This document extends the specification of ``address`` in [OIDC] with an additional member ``address.house_number`` |
-| sex | sex | number | numeric encoding as described in [Section 2.3](#23-optional-attributes-specified-in-cir-20242977); gender from [OIDC] uses a different value range and is therefore not used |
+| sex | sex | number | numeric encoding as described in [section 3.3](#33-optional-attributes); gender from [OIDC] uses a different value range and is therefore not used |
 | issuing_authority | issuing_authority | string |  |
 | issuing_country | issuing_country | string |  |
 | document_number | document_number | string |  |
 | issuing_jurisdiction | issuing_jurisdiction | string |  |
-| location_status | status | JSON object | See [Section 3.2.2](#322-attribute-status) |
-| trust_anchor | trust_anchor | string |  |
+| trust_anchor | trust_anchor | string | Optional |
 
 
 #### 3.2.2 Attribute status
 
-For SD-JWT VC-compliant PIDs, the PID MUST include a `status` claim if the technical validity period is greater than 25 hours. This claim enables Relying Parties to determine if a credential has been revoked via a status list mechanism, as specified in [SD-JWT VC].
+For SD-JWT VC-compliant PIDs, the PID MUST include a `status` claim if the technical validity period is greater than 24 hours. This claim enables Relying Parties to determine if a credential has been revoked via the Token Status List mechanism, as specified in [Token Status List].
 
-The `status` claim SHALL be a JSON object with the following members:
-- `type` (string): SHALL be `"status-list"`.
-- `status_list_credential` (string, URI): The URI of the Status List Credential document that contains the status bitstring.
-- `status_list_index` (integer, >= 0): The zero-based index into the status list bitstring that corresponds to this credential.
-- `status_purpose` (string): SHALL be `"revocation"` for this PID.
+The `status` claim SHALL be a JSON object containing the `status_list` member specified in clause 6.2 of [Token Status List], which has the following members:
+- `idx` (integer, >= 0): The index in the status list that corresponds to this PID.
+- `uri` (string, URI): The URI of the Status List Token.
 
 Example:
 ```json
 {
   "status": {
-    "type": "status-list",
-    "status_list_credential": "https://issuer.example.com/status/1",
-    "status_list_index": 42,
-    "status_purpose": "revocation"
+    "status_list": {
+      "idx": 42,
+      "uri": "https://issuer.example.com/status/1"
+    }
   }
 }
 ```
@@ -540,9 +580,9 @@ Requirement PID_14 in ARF Annex 2 defines the base type to be "urn:eudi:pid:1". 
 
 SD-JWT VC specifies Type Metadata as a machine-readable format for information
 regarding a type, including the information on claims such as what is contained
-in this document. Requirement PID_15 in [Annex 2, Topic 3](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework/blob/main/docs/annexes/annex-2/annex-2.02-high-level-requirements-by-topic.md#a232-topic-3---pid-rulebook) requires that the information on the
-common EU-wide type as well as on any domestic types is published and
-accessible in a catalog.
+in this document. Requirement PID_16 in [Annex 2, Topic 3](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework/blob/main/docs/annexes/annex-2/annex-2.02-high-level-requirements-by-topic.md#a232-topic-3---pid-rulebook) requires a PID Provider that defines a domestic type to publish
+information about that type, including all claim identifiers, their definition, presence and
+encoding format. The Annex requires this scheme to be published in accordance with Article 8 of [CIR 2025/1569].
 
 ### 5.3 Example
 
@@ -552,7 +592,7 @@ EXAMPLE: The following example shows the payload of a PID in SD-JWT VC format be
 ```json
 {
     "vct": "urn:eudi:pid:de:1",
-    "attestation_legal_category": "PUB-EAA",
+    "attestation_legal_category": "PID",
 
     "given_name": "Jean",
     "family_name": "Dupont",
@@ -571,7 +611,7 @@ EXAMPLE: The following example shows the payload of a PID in SD-JWT VC format be
     "sex": 5,
 
     "place_of_birth": {
-        "country": "DD"
+        "country": "DE"
     },
 
     "cnf": {
@@ -586,11 +626,14 @@ EXAMPLE: The following example shows the payload of a PID in SD-JWT VC format be
     "issuing_authority": "DE",
     "issuing_country": "DE",
 
+    "nbf": 1767139200,
+    "exp": 1767740400,
+
     "status": {
-        "type": "status-list",
-        "status_list_credential": "https://issuer.example.com/status/1",
-        "status_list_index": 42,
-        "status_purpose": "revocation"
+        "status_list": {
+            "idx": 42,
+            "uri": "https://issuer.example.com/status/1"
+        }
     }
 }
 ```
@@ -599,19 +642,24 @@ Note: The `cnf` claim is used for expressing key binding in SD-JWT VCs.
 The example above shows a public key in JWK format.
 
 Note: Additional technical claims are not shown here, including
-references to the issuer and more.
+references to the issuer and more. Selective disclosure is also not shown.
 
 ## 6 Protocols
 
 ### 6.1 Issuance
 
 PIDs are issued using OpenID for Verifiable Credential Issuance [OpenID4VCI], as
-profiled by [HAIP].
+profiled by [HAIP] and by [ETSI TS 119 472-3] V1.1.1, as adapted by Annex I to [CIR 2024/2982].
 
 ### 6.2 Presentation
 
-PIDs are presented using OpenID for Verifiable Presentations [OpenID4VP] for remote
-presentation, and ISO/IEC 18013-5 device retrieval for proximity presentation.
+PIDs are presented as specified in Annex II to [CIR 2024/2982], which applies Annex C of
+[ISO/IEC 18013-7] and [ETSI TS 119 472-2] V1.2.1:
+
+- for remote presentation, using OpenID for Verifiable Presentations [OpenID4VP] as profiled by [HAIP], or ISO/IEC 18013-7 Annex C for the mdoc format through a mediating API;
+- for proximity presentation, using ISO/IEC 18013-5 device retrieval.
+
+Server retrieval as specified in ISO/IEC 18013-5 SHALL NOT be supported.
 
 ## 7 Issuance
 
@@ -624,9 +672,10 @@ presentation, and ISO/IEC 18013-5 device retrieval for proximity presentation.
 | Relying Party must also verify a PID | not applicable | EW-DM-12-031 |
 | Binding subject | natural person | CIR 2024/2977, person identification data for the natural person |
 
-A PID SHALL be bound to the Wallet Unit key material. For SD-JWT VC this is expressed
-through the `cnf` claim, as stated in section 5.2. The row for EW-DM-12-031 is not
-applicable because this attestation is itself the PID.
+A PID SHALL be cryptographically bound to the Wallet Unit to which it is issued, using a key
+whose private part is stored in the WSCD. For SD-JWT VC this is expressed through the `cnf`
+claim as stated in section 5.2, and for mdoc through `deviceKey` as stated in section 5.1. The
+row for EW-DM-12-031 is not applicable because this attestation is itself the PID.
 
 ### 7.2 Issuance Policy
 
@@ -637,11 +686,11 @@ issue short-lived PIDs as described there.
 
 - PID Providers SHALL issue a PID only after identity verification according to the
   applicable Member State PID issuance framework.
-- PID Providers SHALL set the technical validity period, using `exp` and, where
-  present, `nbf`.
+- PID Providers SHALL set the technical validity period, using `nbf` and `exp` for SD-JWT VC,
+  and `validFrom` and `validUntil` in the MSO for mdoc.
 - The administrative validity period, expressed through `expiry_date` and
   `issuance_date`, is distinct from the technical validity period. See the
-  clarification recorded against `expiry_date` in section 4.1.
+  clarification recorded against `expiry_date` in section 4.2.
 - During the administrative validity period the PID Provider will provide multiple
   successive PIDs to a user, typically without action by the user. Reissuance cadence
   is set by the PID Provider.
@@ -653,28 +702,37 @@ This attestation defines no embedded disclosure policy.
 ## 8 Revocation
 
 
-PIDs MAY be either (a) short-lived and non-revocable, or (b) long-lived and revocable, in line with ARF Annex 2 Topic 7.
+PIDs MAY be either (a) short-lived and non-revocable, or (b) long-lived and revocable, in line with ARF Annex 2 Topic 7 and Annex II to [CIR 2024/2979].
 
 Revocation strategy:
 - A PID Provider SHALL use one of the following approaches:
   - Issue short-lived PIDs with a technical validity period of 24 hours or less; or
-  - Support revocation using an Attestation Status List (ASL) or Attestation Revocation List (ARL) mechanism.
-- If a PID is revocable, the PID Provider SHALL be the only party responsible for executing revocation of that PID, and SHALL NOT reverse revocation once executed.
-- The PID Provider MAY support temporary suspension before permanent revocation, with a maximum suspension period defined in the revocation policy.
-- The PID Provider SHALL maintain a revocation policy specifying under which conditions it revokes a PID (e.g. compromise, attribute changes, explicit user request, death of the subject), notification procedures for users, and user rights including the right to request revocation at any time.
+  - Support revocation using an Attestation Status List for SD-JWT VC PIDs (VCR_11a), or an Attestation Status List or Attestation Revocation List for mdoc PIDs (VCR_11).
+- If a PID is revocable, the PID Provider SHALL be the only party responsible for executing revocation of that PID, and SHALL NOT reverse revocation once executed (CIR 2024/2977, Article 5(2) and 5(5)).
+- A status element SHALL only indicate whether the PID is revoked or not revoked. Other status values, such as suspension, SHALL NOT be supported (EAA-4.2.11.1-06).
+- The PID Provider SHALL have a written and publicly accessible policy on validity status management, including the conditions under which it revokes a PID (Article 5(1)).
+- The PID Provider of a revocable PID SHALL revoke it at least:
+  - upon the explicit request of the user (Article 5(4)(a));
+  - where the wallet unit attestation of the Wallet Unit to which the PID was issued has been revoked (Article 5(4)(b));
+  - upon the death of the subject (VCR_08);
+  - where an attribute value changed and the PID is still valid for at least 24 hours (VCR_09);
+  - in other situations determined in its policy (Article 5(4)(c)).
 
 Technical mechanisms:
-- For SD-JWT VC-based PIDs, revocation is expressed via the `status` claim (see Section 3.2.2) using the status-list mechanism.
-- For ISO/IEC 18013-5-compliant PIDs, revocation information is provided via the MSO as defined in ISO/IEC 18013-5; no `location_status` attribute is used (see Section 3.1.3).
+- For SD-JWT VC-based PIDs, revocation is expressed via the `status` claim (see Section 3.2.2 in section 5.2) using the Token Status List mechanism.
+- For ISO/IEC 18013-5-compliant PIDs, the MSO SHALL contain the `status` structure specified in EAA-6.2.10.1-17 of Annex II to [CIR 2024/2979], holding `status_list` or `identifier_list`. No `location_status` attribute is used.
+- A status list for mdoc PIDs SHALL use 1-bit entries and only the values 'valid' and 'invalid' (EAA-6.2.10.1-03.1, EAA-6.2.10.1-12.1).
 
 Relying Party (RP) checks:
 - A RP Instance SHOULD verify revocation status when the PID is revocable, and SHALL perform a risk analysis if it decides not to.
+- A RP that needs to verify revocation status SHALL support both the Attestation Status List and the Attestation Revocation List mechanism (VCR_12).
 - Relying Parties SHOULD NOT fetch status information at presentation time. Instead, they SHOULD periodically retrieve and cache the relevant ASL/ARL and distribute it to their RP Instances.
 - If reliable revocation information is unavailable or indeterminate, the RP SHALL decide whether to accept or refuse the PID based on its risk analysis. The RP SHALL log such incidents and MAY report recurring failures to the PID Provider.
 - Revocation status checking SHALL be designed to prevent correlation of user identity across Relying Parties (e.g., using batch status lists rather than per-credential status endpoints).
 
 Timing:
 - Where revocation is supported, the PID Provider SHOULD ensure that revocation is reflected in published status information within 24 hours of the revocation decision.
+- Where a PID Provider has revoked a PID, it SHALL inform the user through dedicated and secure channels within 24 hours of the revocation, stating the reasons, concisely and in clear and plain language (Article 5(3)).
 - For emergency revocations (e.g., security compromise), the PID Provider SHOULD propagate revocation within a shorter timeframe where technically feasible.
 
 ## 9 Presentation
@@ -705,31 +763,36 @@ PID is used to identify a natural person (user) in national and cross-border dig
 Primary use cases:
 - Proving the identity of a natural person (user) to a Relying Party(RP) in online services.
 - Supporting regulated or high-trust onboarding and access control flows where identification is required.
-- Supporting attribute verification (e.g., residency, age) subject to data minimisation and proportionality.
+- Supporting attribute verification (e.g., residency) subject to data minimisation and proportionality.
 
 Issuance requirements and expectations:
 - PID Providers SHALL issue PID only after identity verification according to the applicable Member State PID issuance framework.
-- PID Providers SHALL bind PID to the Wallet Unit key material as defined in Chapter 3 (e.g., `cnf` for SD-JWT VC).
-- PID Providers SHALL set technical validity (`exp`, and `nbf` if present) and SHALL provide status/revocation capability as defined in Chapter 6.
-- For SD-JWT VC PIDs, the PID SHALL include a `status` claim when required by Section 3.2.2 (technical validity period > 25 hours).
+- PID Providers SHALL bind PID to the Wallet Unit as defined in section 7.1 (e.g., `cnf` for SD-JWT VC).
+- PID Providers SHALL set technical validity (`nbf` and `exp`) and SHALL provide status/revocation capability as defined in chapter 8.
+- For SD-JWT VC PIDs, the PID SHALL include a `status` claim when required by Section 3.2.2 (technical validity period > 24 hours).
 
 Expected user behaviours:
 - The user SHOULD approve PID presentation only when the Wallet Unit shows the RP identity, intended use, and a privacy policy reference.
 - The user SHOULD approve presentation only when the requested attributes are necessary for the transaction.
-- Preferably, the user SHOULD either approve all requested attributes or deny the request. If the user does not want to disclose a requested attribute, the user SHOULD deny the request and allow the RP to send a revised request (see Section 2.1).
+- The user can approve the presentation in part or in full ([CIR 2024/2982], Article 3(9)), and can refuse to present any requested attribute.
 - Where selective disclosure is supported by the format, the user SHOULD disclose only the minimum attributes required by the transaction.
+
+Portrait protection (CIR 2024/2977, Article 3a):
+- Wallet Units SHALL warn the user when a RP requests the `portrait`, indicating that the request involves the sharing of biometric data and requires confirmation for its selective disclosure.
+- Wallet Units SHALL require the user to explicitly and specifically confirm the presentation of the `portrait`.
+- A RP SHALL NOT retain the `portrait` unless its processing is necessary for the purposes of identification and authentication in compliance with Union data protection law or this is provided for by Union or national law, in compliance with Union data protection law. It SHALL NOT transfer the `portrait` to third countries or international organisations unless permitted by Union data protection law (PID_03a).
 
 Relying Party (RP) behaviours:
 - The RP SHALL be registered as a Wallet RP and SHALL request only attributes justified for the intended use.
 - The RP SHALL authenticate to the Wallet Unit (e.g., using its access certificate chain) in the applicable presentation protocol.
 - The RP SHOULD include (or enable retrieval of) the registered intended use information and privacy policy reference so the Wallet Unit can inform the user.
-- The RP SHALL verify the PID signature according to Chapter 3 and SHALL validate issuer trust and authorisation using applicable trust anchors (Chapter 5).
-- The RP SHALL validate technical validity (check `exp`, and `nbf` if present) and SHALL apply revocation/status checks as defined in Chapter 6.
+- The RP SHALL verify the PID signature according to chapter 5 and SHALL validate issuer trust and authorisation using applicable trust anchors (chapter 10).
+- The RP SHALL validate technical validity (check `nbf` and `exp`) and SHALL apply revocation/status checks as defined in chapter 8.
 - The RP MAY verify device binding / proof of possession where supported. If the RP requests cryptographic holder binding in the presentation protocol, it SHALL NOT accept a non-device-bound PID.
 
 Presentation requirements:
 - The RP SHOULD request only the minimum attributes needed for the transaction (data minimisation).
-- The RP SHALL NOT rely on non-unique contact attributes (e.g., `email_address`) as unique identifiers, as already stated in Chapter 3.
+- The RP SHALL NOT rely on non-unique contact attributes (e.g., `email_address`) as unique identifiers.
 
 Transactional data:
 - The RP MAY keep minimal logs necessary to demonstrate verification events and security-relevant auditability (e.g., timestamps, verification outcome, issuer identifier, status-check result).
@@ -743,6 +806,10 @@ Proximity presentation requires the mdoc format, which section 5 records as supp
 ### 9.3 Transactional data
 
 This attestation defines no transactional data.
+
+Wallet Units SHALL NOT use a PID private key to sign transactional data received from a
+Relying Party in a presentation request. PID Providers shall not allow the private key of
+the PID to sign such data (ISO/IEC 18013-5-RESP-03 in Annex II to [CIR 2024/2982]).
 
 ## 10 Trust Framework
 
@@ -758,7 +825,7 @@ that certificate rather than the attestation directly.
 The attribute or metadata carrying the trust anchor location contains at least the
 URL at which a machine-readable version can be found or looked up.
 
-Coherence check: the attribute named here is `trust_anchor`, declared in section 4.2.
+Coherence check: the attribute named here is `trust_anchor`, declared as optional in section 3.3. The list of PID Providers made available by the Commission under [CIR 2024/2980] enables the authentication of PIDs, as section 5 of the Annex requires, whether or not this attribute is present.
 
 **Deployment profile**
 
@@ -773,28 +840,28 @@ Trust anchor distribution:
 - PID Provider trust anchors SHALL be distributed via LoTE following the PID Provider registration and notification process, where applicable.
 - Qualified trust anchors (QTSP trust anchors) SHALL be obtained via eIDAS Trusted Lists (and their corresponding publication mechanisms).
 - Access Certificate Authority trust anchors (used for RP authentication towards the Wallet Unit) SHALL be distributed via LoTE.
-- PID Providers SHOULD populate the optional PID metadata `trust_anchor` (Section 2.6) with at least one machine-readable pointer to the applicable trust anchor source (LoTE entry, Trusted List, or an index pointing to the authoritative source).
+- PID Providers MAY populate the optional PID attribute `trust_anchor` (section 3.3) with at least one machine-readable pointer to the applicable trust anchor source (LoTE entry, Trusted List, or an index pointing to the authoritative source).
 
 Trust anchor lookup mechanisms:
 - RPs and Wallet Units SHALL support trust anchor lookup based on:
-  - `issuing_country` (Section 2.5) for selecting the relevant national LoTE / Trusted List context, and
-  - the optional `trust_anchor` metadata (Section 2.6) as a machine-readable pointer when present.
+  - the PID Provider certificate referenced in the signature header (`x5u`), or `issuing_country` (section 4.1) when disclosed, for selecting the relevant national LoTE / Trusted List context, and
+  - the optional `trust_anchor` attribute (section 3.3) as a machine-readable pointer when present and disclosed.
 - RPs and Wallet Units SHOULD cache trust anchor artefacts and apply an update policy appropriate for the deployment, including re-fetching when a pointer changes or when cached artefacts expire.
 
 Verification steps - RP verifies PID authenticity:
-1) Determine the legal category of the PID using `attestation_legal_category` (Section 2.5).
-2) Verify the PID signature according to Chapter 3.
+1) Where `attestation_legal_category` (section 3.3) is present and disclosed, read the legal category of the PID. It is not required to identify a PID, because the attestation type already does so.
+2) Verify the PID signature according to chapter 5.
 3) Obtain the relevant trust anchor(s):
    - For PID or QEAA, obtain the Provider trust anchor from the applicable LoTE / Trusted List.
    - For PuB-EAA, validate the PuB-EAA Provider certificate chain up to the QTSP trust anchor from the QTSP Trusted List.
    - For non-qualified EAA cases, obtain the applicable domain trust anchor using the mechanism defined below (WE BUILD profile).
-4) Validate the trust chain (including intermediate certificates where used) and validate revocation/status information as specified in Chapter 6.
+4) Validate the trust chain (including intermediate certificates where used) and validate revocation/status information as specified in chapter 8.
 5) Where a trust anchor source is retrieved dynamically, validate the authenticity and integrity of the retrieved artefact before use (for example, using a signed LoTE/Trusted List artefact or an authenticated distribution channel).
 
 Verification steps - Wallet Unit authenticates the RP (precondition for PID presentation):
 1) Obtain the trust anchor of the Access Certificate Authority from the applicable LoTE.
 2) Validate the RP access certificate chain included in the presentation request up to the Access CA trust anchor.
-3) Validate revocation/status of certificates in the chain as required by the applicable ecosystem rules and Chapter 6.
+3) Validate revocation/status of certificates in the chain as required by the applicable ecosystem rules.
 4) Proceed to user approval only after successful RP authentication.
 
 WE BUILD specific profile and extensions:
@@ -803,8 +870,8 @@ WE BUILD specific profile and extensions:
   - trust anchors for the Access Certificate Authorities used by WE BUILD participants.
 - The WE BUILD LoTE SHOULD be structured so that entries can be resolved by `issuing_country` and entity identifier, and SHOULD support inclusion of pointers to authoritative national LoTE / Trusted List sources where available.
 - Wallet Units and RPs in WE BUILD SHALL be able to resolve trust anchors using either:
-  - the `trust_anchor` metadata carried in the PID, or
-  - a pre-configured WE BUILD LoTE entry point based on `issuing_country`.
+  - the `trust_anchor` attribute carried in the PID, when present and disclosed, or
+  - a pre-configured WE BUILD LoTE entry point, selected as described under trust anchor lookup mechanisms above.
 
 Practical examples (illustrative):
 - Example 1 - PID includes `trust_anchor` pointing to a LoTE entry:
@@ -827,13 +894,22 @@ For information regarding the use of the trust list in WE BUILD, please consult 
 | [OIDC] | Sakimura, N. et al., "OpenID Connect Core 1.0", OpenID Foundation. Available: <https://openid.net/specs/openid-connect-core-1_0.html> |
 | [EKYC] | OpenID Connect for Identity Assurance Claims Registration <https://openid.net/specs/openid-connect-4-ida-claims-1_0-final.html#ICAO-Doc9303> |
 | [SD-JWT VC] | SD-JWT-based Verifiable Credentials (SD-JWT VC). Available: <https://datatracker.ietf.org/doc/draft-ietf-oauth-sd-jwt-vc/> |
-| [Topic 3] | ARF Annex 2 - Topic 3 - Attestation revocation and revocation checking Available: <https://eudi.dev/3.0.0/annexes/annex-2/annex-2.02-high-level-requirements-by-topic/> |
+| [Topic 3] | ARF Annex 2 - Topic 3 - PID Rulebook. Available: <https://eudi.dev/3.0.0/annexes/annex-2/annex-2.02-high-level-requirements-by-topic/> |
 | [Topic 12] | ARF Annex 2 - Topic 12 - Attestation Rulebooks, Available: <https://eudi.dev/3.0.0/annexes/annex-2/annex-2.02-high-level-requirements-by-topic/> |
 | [W3C VCDM v2.0] | Sporny, M. *et al,* Verifiable Credentials Data Model v2.0, W3C Recommendation. |
-
-For further references please see [ARF Chapter 10](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework/blob/main/docs/architecture-and-reference-framework-main.md#10-references) of the ARF main document.
-| [CIR 2024/2977] | [Commission Implementing Regulation (EU) 2024/2977](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402977) of 28 November 2024 on person identification data and electronic attestations of attributes |
-| [ETSI TS 119 472-1] | ETSI TS 119 472-1, Electronic Signatures and Trust Infrastructures; Profiles for Electronic Attestations of Attributes; Part 1: General requirements |
+| [CIR 2024/2977] | [Commission Implementing Regulation (EU) 2024/2977](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402977) of 28 November 2024 on person identification data and electronic attestations of attributes, as amended by [CIR 2026/1731] |
+| [CIR 2026/1731] | [Commission Implementing Regulation (EU) 2026/1731](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202601731) of 15 July 2026 amending Implementing Regulations (EU) 2024/2977, (EU) 2024/2979, (EU) 2024/2980 and (EU) 2024/2982 as regards applicable standards and specifications |
+| [CIR 2024/2979] | [Commission Implementing Regulation (EU) 2024/2979](http://data.europa.eu/eli/reg_impl/2024/2979/oj) of 28 November 2024 on the integrity and core functionalities of European Digital Identity Wallets, as amended by [CIR 2026/1731] |
+| [CIR 2024/2980] | [Commission Implementing Regulation (EU) 2024/2980](http://data.europa.eu/eli/reg_impl/2024/2980/oj) of 28 November 2024 on notifications to the Commission concerning the European Digital Identity Wallet ecosystem, as amended by [CIR 2026/1731] |
+| [CIR 2024/2982] | [Commission Implementing Regulation (EU) 2024/2982](http://data.europa.eu/eli/reg_impl/2024/2982/oj) of 28 November 2024 on protocols and interfaces to be supported by the European Digital Identity Framework, as amended by [CIR 2026/1731] |
+| [CIR 2025/1569] | [Commission Implementing Regulation (EU) 2025/1569](http://data.europa.eu/eli/reg_impl/2025/1569/oj) of 29 July 2025 on qualified electronic attestations of attributes and electronic attestations of attributes provided by or on behalf of a public sector body responsible for an authentic source |
+| [ETSI TS 119 472-1] | ETSI TS 119 472-1 V1.2.1 (2026-02), Electronic Signatures and Trust Infrastructures; Profiles for Electronic Attestations of Attributes; Part 1: General requirements |
+| [ETSI TS 119 472-2] | ETSI TS 119 472-2 V1.2.1 (2026-03), as applied by Annex II to [CIR 2024/2982] |
+| [ETSI TS 119 472-3] | ETSI TS 119 472-3 V1.1.1 (2026-03), as applied by Annex I to [CIR 2024/2982] |
+| [ISO/IEC 18013-7] | ISO/IEC 18013-7:2025, Personal identification --- ISO-compliant driving licence - Part 7: Mobile driving licence (mDL) add-on functions |
+| [Token Status List] | IETF draft-ietf-oauth-status-list-20, Token Status List, 20 April 2026. Available: <https://datatracker.ietf.org/doc/draft-ietf-oauth-status-list/> |
 | [HAIP] | OpenID4VC High Assurance Interoperability Profile. Available: <https://openid.net/specs/openid4vc-high-assurance-interoperability-profile-1_0.html> |
 | [OpenID4VCI] | OpenID for Verifiable Credential Issuance. Available: <https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html> |
 | [OpenID4VP] | OpenID for Verifiable Presentations. Available: <https://openid.net/specs/openid-4-verifiable-presentations-1_0.html> |
+
+For further references please see [ARF Chapter 10](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework/blob/main/docs/architecture-and-reference-framework-main.md#10-references) of the ARF main document.
